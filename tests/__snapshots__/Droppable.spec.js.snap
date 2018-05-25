@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Droppable> - must render children as it is 1`] = `
+<div
+  style={
+    Object {
+      "borderWidth": 0,
+    }
+  }
+>
+  Sample content
+</div>
+`;

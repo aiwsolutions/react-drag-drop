@@ -1,0 +1,69 @@
+# Javascript Node CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-javascript/ for more details
+#
+version: 2
+
+jobs:
+  build_and_test:
+    docker:
+      # specify the version you desire here
+      - image: circleci/node:7.10
+      
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/2.0/circleci-images/
+      # - image: circleci/mongo:3.4.4
+
+    working_directory: ~/checkout-dir
+
+    steps:
+      - checkout
+      
+      # Download and cache dependencies
+      - restore_cache:
+          key: dependencies-{{ checksum "package.json" }}
+
+      - run: yarn install
+
+      # run tests!
+      - run: yarn test
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: dependencies-{{ checksum "package.json" }}
+
+  build_and_publish:
+    docker:
+      - image: circleci/node:7.10
+    
+    working_directory: ~/checkout-dir
+
+    steps: 
+      - checkout
+      
+      # Download cached dependencies
+      - restore_cache:
+          key: dependencies-{{ checksum "package.json" }}
+
+      - run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
+
+      - run: npm run build
+
+      - run: npm publish
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build_and_test
+      - build_and_publish:
+          requires:
+            - build_and_test
+          filters:
+            tags: 
+              only: /v[0-9]+(\.[0-9]+)*/
+            branches: 
+              only: master
+

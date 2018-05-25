@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Draggable> - must render children as it is 1`] = `
+<div
+  className="test"
+  onMouseDown={[Function]}
+  onMouseUp={[Function]}
+  onTouchEnd={[Function]}
+  onTouchStart={[Function]}
+  style={
+    Object {
+      "backgroundColor": "#0000ff",
+    }
+  }
+>
+  Sample content
+</div>
+`;
