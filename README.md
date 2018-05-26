@@ -1,6 +1,7 @@
 # Super simple drag-n-drop library for react developers
 
 [![CircleCI](https://circleci.com/gh/aiwsolutions/react-drag-drop/tree/master.svg?style=svg&circle-token=b30651548758edc5e3f4ffad6b8f3099a805de9e)](https://circleci.com/gh/aiwsolutions/react-drag-drop/tree/master)
+[![npm version](https://badge.fury.io/js/aiws-react-dnd.svg)](https://badge.fury.io/js/aiws-react-dnd)
 
 > tldr; 
 > There is no fancy thing in this library compares to others. I just find myself difficult to understand react-dnd and 
