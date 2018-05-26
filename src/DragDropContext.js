@@ -1,6 +1,3 @@
-/**
- * Copyright by AIWSolutions.
- */
 import { findDOMNode } from 'react-dom';
 import rbush from 'rbush';
 import _ from 'lodash';

@@ -1,6 +1,3 @@
-/**
- * Copyright by AIWSolutions.
- */
 import React from 'react';
 import PropTypes from 'prop-types';
 import DragDropContext from './DragDropContext';

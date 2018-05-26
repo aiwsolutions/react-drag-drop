@@ -1,6 +1,3 @@
-/**
- * Copyright by AIWSolutions.
- */
 /* eslint react/no-find-dom-node: 0 */
 import ReactDOM from 'react-dom';
 import _ from 'lodash';

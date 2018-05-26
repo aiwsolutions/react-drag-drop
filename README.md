@@ -89,3 +89,4 @@ onUnmount | func | (Optional) This function will be called on componentWillUnmou
 
 # Notice
 This library is scallable when using with [aiws-elm](https://github.com/aiwsolutions/aiws-elm).
+MIT
