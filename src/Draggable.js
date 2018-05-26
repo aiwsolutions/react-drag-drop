@@ -187,7 +187,9 @@ class Draggable extends React.Component {
             const cacheBoundary = DragDropContext.getCacheBoundary();
             // We only draw a placeholder when it is dragging
             if (cacheBoundary) {
-                const { minX, maxX, minY, maxY } = cacheBoundary;
+                const {
+                    minX, maxX, minY, maxY
+                } = cacheBoundary;
                 return (
                     <div
                         style={{

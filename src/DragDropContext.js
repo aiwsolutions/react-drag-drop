@@ -155,9 +155,12 @@ class DragDropContext {
                 minX, minY, maxX, maxY
             }
         } = this.cache;
+
         this.movingDOM = sourceDOM.cloneNode(true);
         // if this is fixed, then we have to accumulate scroll position
         this.movingDOM.style.position = 'absolute';
+        // this is to include padding border into width
+        this.movingDOM.style.boxSizing = 'border-box';
         this.movingDOM.style.width = `${maxX - minX}px`;
         this.movingDOM.style.height = `${maxY - minY}px`;
         this.movingDOM.style.left = `${minX}px`;
@@ -311,7 +314,7 @@ class DragDropContext {
                 return false;
             }
             const { data, boundary } = this.cache;
-            if (onDraggedSourceOverred({ ...data, ...boundary })) {
+            if (onDraggedSourceOverred({ ...boundary, data })) {
                 if (this.currentTarget && this.currentTarget.uniqueId !== uniqueId) {
                     this.currentTarget.onDraggedSourceOuted();
                 }
