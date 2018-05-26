@@ -1,8 +1,8 @@
 {
   "name": "aiws-react-dnd",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Super simple drag-n-drop library for React",
-  "main": "dist/index.js",
+  "main": "dist",
   "scripts": {
     "build": "NODE_ENV=production babel src --out-dir dist",
     "build:examples": "webpack",
