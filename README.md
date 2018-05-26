@@ -1,11 +1,13 @@
 # Super simple drag-n-drop library for react developers
 
+[![CircleCI](https://circleci.com/gh/aiwsolutions/react-drag-drop/tree/master.svg?style=svg&circle-token=b30651548758edc5e3f4ffad6b8f3099a805de9e)](https://circleci.com/gh/aiwsolutions/react-drag-drop/tree/master)
+
 > tldr; 
 > There is no fancy thing in this library compares to others. I just find myself difficult to understand react-dnd and 
 > react-beautiful-dnd. They are both amazing with plenty of features and supports. I need a library that allows me to
 > apply drag-n-drop quickly and with my customization, if there is any error, I won't spend too much time to understand
 > the library. So I wrote this library. It's basically using a cloned DOM for moving affect and improving the speed by 
-> caching all the boundaries in rbush (https://github.com/mourner/rbush) tree.
+> caching all the boundaries in [rbush](https://github.com/mourner/rbush) tree.
 
 # Demo
 https://aiwsolutions.github.io/react-drag-drop/
@@ -85,4 +87,4 @@ onRendered | func | (Optional) This function will be called on componentDidUpdat
 onUnmount | func | (Optional) This function will be called on componentWillUnmount of the element.
 
 # Notice
-This library is scallable when using with [aiws-elm](https://github.com/aiwsolutions/aiws-elm)
+This library is scallable when using with [aiws-elm](https://github.com/aiwsolutions/aiws-elm).
