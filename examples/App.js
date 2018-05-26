@@ -114,7 +114,13 @@ class App extends React.Component {
 
     render() {
         return (
-            <div>
+            <div
+                style={{
+                    padding: 16
+                }}
+            >
+                <h1>Examples of aiws-react-dnd</h1>
+                <h3>Simple use (no sortable)</h3>
                 <div
                     style={{
                         float: 'left'
@@ -133,9 +139,10 @@ class App extends React.Component {
                 <div
                     style={{
                         position: 'absolute',
-                        top: 200
+                        top: 300
                     }}
                 >
+                    <h3>With proposed implementation of sortable</h3>
                     <div
                         style={{
                             float: 'left'

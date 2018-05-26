@@ -62,9 +62,7 @@ class Draggable extends React.Component {
         /**
          * The type for matching with Droppable
          */
-        type: PropTypes.string.isRequired,
-
-        shadowing: PropTypes.bool
+        type: PropTypes.string.isRequired
     };
 
     constructor(props) {

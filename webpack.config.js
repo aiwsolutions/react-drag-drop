@@ -10,7 +10,7 @@ module.exports = {
     mode: 'development',
     output: {
         filename: 'bundle.js',
-        path: path.join(ROOT_PATH, 'examples', 'build')
+        path: ROOT_PATH
     },
     resolve: {
         extensions: ['.js', '.jsx'],
