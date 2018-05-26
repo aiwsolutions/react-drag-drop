@@ -32,7 +32,7 @@ function matchesSelectorSingle(el, selector) {
 
 export function getComponentBoundary(component) {
     const domNode = ReactDOM.findDOMNode(component);
-    return domNode.getBoundingClientRect();
+    return domNode && domNode.getBoundingClientRect && domNode.getBoundingClientRect();
 }
 
 /* eslint no-underscore-dangle: 0 */
