@@ -1,6 +1,6 @@
 {
   "name": "aiws-react-dnd",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Super simple drag-n-drop library for React",
   "main": "dist/index.js",
   "scripts": {

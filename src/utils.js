@@ -74,7 +74,7 @@ export function getScrollingElement(element) {
     const excludeStaticParent = style.position === 'absolute';
 
     let parent = element;
-    while (parent !== document.body && parent !== document.documentElement) {
+    while (parent && parent !== document.body && parent !== document.documentElement) {
         style = getComputedStyle(parent);
         if ((!excludeStaticParent || style.position !== 'static')
             && overflowRegex.test(style.overflow + style.overflowY + style.overflowX)) {
