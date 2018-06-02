@@ -1,7 +1,7 @@
 import { findDOMNode } from 'react-dom';
 import rbush from 'rbush';
 import _ from 'lodash';
-import { isTouchable, lockDownSelection, getScrollElement, getDirection, getRectData } from './utils';
+import { isTouchable, lockDownSelection, getScrollingElement, getDirection, getRectData } from './utils';
 
 class DragDropContext {
     boundaries = rbush();
@@ -322,10 +322,10 @@ class DragDropContext {
         });
     }
 
-    scrollViewPort({ clientX, clientY }) {
-        const viewPortWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-        const viewPortHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-        const scrollElement = getScrollElement();
+    scrollViewPort({ clientX, clientY, target }) {
+        const scrollElement = getScrollingElement(target);
+        const viewPortWidth = Math.max(scrollElement.clientWidth, window.innerWidth || 0);
+        const viewPortHeight = Math.max(scrollElement.clientHeight, window.innerHeight || 0);
         const scrolledTop = scrollElement.scrollTop;
         const scrolledLeft = scrollElement.scrollLeft;
         if (clientX < this.scrollSensitive && scrolledLeft > 0) {

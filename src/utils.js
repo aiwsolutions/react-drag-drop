@@ -63,14 +63,31 @@ export function lockDownSelection(lock) {
     }
 }
 
-export function getScrollElement() {
+const overflowRegex = /(auto|scroll)/;
+export function getScrollingElement(element) {
+    if (!element) {
+        return document.scrollingElement || document.documentElement;
+    }
+    let style = getComputedStyle(element);
+    if (style.position === 'fixed') return document.body;
+    const excludeStaticParent = style.position === 'absolute';
+
+    let parent = element;
+    while (parent !== document.body && parent !== document.documentElement) {
+        style = getComputedStyle(parent);
+        if ((!excludeStaticParent || style.position !== 'static')
+            && overflowRegex.test(style.overflow + style.overflowY + style.overflowX)) {
+            return parent;
+        }
+        parent = parent.parentElement;
+    }
     return document.scrollingElement || document.documentElement;
 }
 
 export function getRectData(uniqueId, {
     left, top, right, bottom
 }, extraData) {
-    const scrollElement = getScrollElement();
+    const scrollElement = getScrollingElement();
     return {
         ...extraData,
         uniqueId,
