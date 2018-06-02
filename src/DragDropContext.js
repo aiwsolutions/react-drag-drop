@@ -40,8 +40,8 @@ class DragDropContext {
         _.unset(this.idBoundaryMap, uniqueId);
     }
 
-    addBoundary(uniqueId, boundary, extraData) {
-        const rectData = getRectData(uniqueId, boundary, extraData);
+    addBoundary(node, uniqueId, boundary, extraData) {
+        const rectData = getRectData(node, uniqueId, boundary, extraData);
         this.boundaries.insert(rectData);
         this.idBoundaryMap[uniqueId] = rectData;
     }
@@ -60,7 +60,7 @@ class DragDropContext {
             throw new Error('A Draggable must be provided with a unique id');
         }
         this.removeBoundaryOf(uniqueId);
-        this.addBoundary(uniqueId, boundary, {
+        this.addBoundary(source, uniqueId, boundary, {
             draggable: true,
             type
         });
@@ -79,7 +79,7 @@ class DragDropContext {
             throw new Error('A Droppable must be provided with a unique id');
         }
         this.removeBoundaryOf(uniqueId);
-        this.addBoundary(uniqueId, boundary, {
+        this.addBoundary(target, uniqueId, boundary, {
             droppable: true,
             acceptTypes,
             onDraggedSourceOverred,

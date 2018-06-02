@@ -1,4 +1,5 @@
 /* eslint react/no-find-dom-node: 0 */
+import React from 'react';
 import ReactDOM from 'react-dom';
 import _ from 'lodash';
 
@@ -84,10 +85,11 @@ export function getScrollingElement(element) {
     return document.scrollingElement || document.documentElement;
 }
 
-export function getRectData(uniqueId, {
+export function getRectData(node, uniqueId, {
     left, top, right, bottom
 }, extraData) {
-    const scrollElement = getScrollingElement();
+    const element = React.isValidElement(node) && ReactDOM.findDOMNode(node);
+    const scrollElement = getScrollingElement(element);
     return {
         ...extraData,
         uniqueId,
