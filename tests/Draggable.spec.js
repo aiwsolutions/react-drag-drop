@@ -59,7 +59,9 @@ function buildLeftClickEvent() {
         button: 0,
         stopPropagation: sinon.stub(),
         pageX: 0,
-        pageY: 0
+        pageY: 0,
+        clientX: 0,
+        clientY: 0
     };
 }
 

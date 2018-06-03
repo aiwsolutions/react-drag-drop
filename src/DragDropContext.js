@@ -1,7 +1,14 @@
-import { findDOMNode } from 'react-dom';
 import rbush from 'rbush';
 import _ from 'lodash';
-import { isTouchable, lockDownSelection, getScrollingElement, getDirection, getRectData } from './utils';
+import {
+    isTouchable,
+    lockDownSelection,
+    getScrollingElement,
+    getDirection,
+    getRectData,
+    getAbsoluteOffsetOf,
+    findDOMNode
+} from './utils';
 
 class DragDropContext {
     boundaries = rbush();
@@ -108,10 +115,11 @@ class DragDropContext {
             throw new Error('Unregistered Draggable with uniqueId', uniqueId);
         }
         const { minX, minY } = boundary;
+        const { offsetX, offsetY } = getAbsoluteOffsetOf(source);
         this.currentSource = source;
         this.cache = {
-            offsetX: lastX - minX,
-            offsetY: lastY - minY,
+            offsetX: (lastX + offsetX) - minX,
+            offsetY: (lastY + offsetY) - minY,
             lastX,
             lastY,
             data,
@@ -153,15 +161,17 @@ class DragDropContext {
             }
         } = this.cache;
 
+        const { offsetX, offsetY } = getAbsoluteOffsetOf(sourceDOM);
+
         this.movingDOM = sourceDOM.cloneNode(true);
         // if this is fixed, then we have to accumulate scroll position
-        this.movingDOM.style.position = 'absolute';
+        this.movingDOM.style.position = 'fixed';
         // this is to include padding border into width
         this.movingDOM.style.boxSizing = 'border-box';
         this.movingDOM.style.width = `${maxX - minX}px`;
         this.movingDOM.style.height = `${maxY - minY}px`;
-        this.movingDOM.style.left = `${minX}px`;
-        this.movingDOM.style.top = `${minY}px`;
+        this.movingDOM.style.left = `${minX - offsetX}px`;
+        this.movingDOM.style.top = `${minY - offsetY}px`;
         this.movingDOM.style.zIndex = 10000;
         document.body.appendChild(this.movingDOM);
     }
@@ -232,12 +242,15 @@ class DragDropContext {
         }
 
         this.scrollViewPort(e);
+        const { offsetX, offsetY } = getAbsoluteOffsetOf(this.currentSource);
+        const pageX = e.clientX + offsetX;
+        const pageY = e.clientY + offsetY;
         // set overred boundaries
         this.cache.overredBoundaries = this.boundaries.search({
-            minX: e.pageX,
-            minY: e.pageY,
-            maxX: e.pageX + 1,
-            maxY: e.pageY + 1
+            minX: pageX,
+            minY: pageY,
+            maxX: pageX + 1,
+            maxY: pageY + 1
         });
 
         const { props: { onDrag, type } } = this.currentSource;
@@ -246,16 +259,15 @@ class DragDropContext {
             return false;
         }
 
-        const { offsetX, offsetY } = this.cache;
         requestAnimationFrame(() => this.moveMovingDomTo({
-            left: e.pageX - offsetX,
-            top: e.pageY - offsetY
+            left: e.clientX - this.cache.offsetX,
+            top: e.clientY - this.cache.offsetY
         }));
 
         this.findAndNotifyDroppables(type, true);
         _.merge(this.cache, {
-            lastX: e.pageX,
-            lastY: e.pageY
+            lastX: e.clientX,
+            lastY: e.clientY
         });
         return true;
     }
@@ -322,22 +334,46 @@ class DragDropContext {
         });
     }
 
-    scrollViewPort({ clientX, clientY, target }) {
-        const scrollElement = getScrollingElement(target);
-        const viewPortWidth = Math.max(scrollElement.clientWidth, window.innerWidth || 0);
-        const viewPortHeight = Math.max(scrollElement.clientHeight, window.innerHeight || 0);
+    calculateViewPort = (scrollElement) => {
+        if (scrollElement === document.body || scrollElement === document.documentElement || scrollElement === window) {
+            return {
+                left: 0,
+                top: 0,
+                right: scrollElement.clientWidth || window.innerWidth,
+                bottom: scrollElement.clientHeight || window.innerHeight
+            };
+        }
+        const {
+            left, top, right, bottom
+        } = scrollElement.getBoundingClientRect();
+        return {
+            left: Math.max(left, 0),
+            top: Math.max(top, 0),
+            right: Math.min(right > 0 ? right : Number.MAX_VALUE, window.innerWidth),
+            bottom: Math.min(bottom > 0 ? bottom : Number.MAX_VALUE, window.innerHeight)
+        };
+    }
+
+    scrollViewPort({ clientX, clientY }) {
+        const scrollElement = getScrollingElement(this.currentSource);
+
+        const {
+            left, top, right, bottom
+        } = this.calculateViewPort(scrollElement);
+
         const scrolledTop = scrollElement.scrollTop;
         const scrolledLeft = scrollElement.scrollLeft;
-        if (clientX < this.scrollSensitive && scrolledLeft > 0) {
+
+        if (clientX < left + this.scrollSensitive && scrolledLeft > 0) {
             scrollElement.scrollLeft = Math.max(0, scrolledLeft - this.scrollSpeed);
         }
-        if (clientX > viewPortWidth - this.scrollSensitive) {
+        if (clientX > right - this.scrollSensitive) {
             scrollElement.scrollLeft = scrolledLeft + this.scrollSpeed;
         }
-        if (clientY < this.scrollSensitive && scrolledTop > 0) {
+        if (clientY < top + this.scrollSensitive && scrolledTop > 0) {
             scrollElement.scrollTop = Math.max(0, scrolledTop - this.scrollSpeed);
         }
-        if (clientY > viewPortHeight - this.scrollSensitive) {
+        if (clientY > bottom - this.scrollSensitive) {
             scrollElement.scrollTop = scrolledTop + this.scrollSpeed;
         }
     }

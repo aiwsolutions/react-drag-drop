@@ -134,8 +134,8 @@ class Draggable extends React.Component {
         }
 
         DragDropContext.startDragging(this, {
-            lastX: pageX,
-            lastY: pageY,
+            lastX: clientX,
+            lastY: clientY,
             data
         });
         return true;

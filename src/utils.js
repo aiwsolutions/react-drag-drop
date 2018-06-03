@@ -64,17 +64,29 @@ export function lockDownSelection(lock) {
     }
 }
 
+export function isValidDOMElement(element) {
+    return element && element.nodeType === Node.ELEMENT_NODE;
+}
+
+export function findDOMNode(element) {
+    if (React.Component.prototype.isPrototypeOf(element)) {       // eslint-disable-line
+        return ReactDOM.findDOMNode(element);
+    }
+    return isValidDOMElement(element) ? element : null;
+}
+
 const overflowRegex = /(auto|scroll)/;
 export function getScrollingElement(element) {
-    if (!element) {
+    const domElement = findDOMNode(element);
+    if (!domElement) {
         return document.scrollingElement || document.documentElement;
     }
-    let style = getComputedStyle(element);
+    let style = getComputedStyle(domElement);
     if (style.position === 'fixed') return document.body;
     const excludeStaticParent = style.position === 'absolute';
 
-    let parent = element;
-    while (parent && parent !== document.body && parent !== document.documentElement) {
+    let parent = domElement;
+    while (parent && parent !== document.body) {
         style = getComputedStyle(parent);
         if ((!excludeStaticParent || style.position !== 'static')
             && overflowRegex.test(style.overflow + style.overflowY + style.overflowX)) {
@@ -85,18 +97,35 @@ export function getScrollingElement(element) {
     return document.scrollingElement || document.documentElement;
 }
 
+export function getAbsoluteOffsetOf(element) {
+    let offsetX = window.pageXOffset !== undefined ? window.pageXOffset
+        : (document.documentElement || document.body).scrollLeft;
+    let offsetY = window.pageYOffset !== undefined ? window.pageYOffset
+        : (document.documentElement || document.body).scrollTop;
+
+    let parent = findDOMNode(element);
+    while (parent && parent !== document.body) {
+        offsetX += parent.scrollLeft || 0;
+        offsetY += parent.scrollTop || 0;
+        parent = parent.parentElement;
+    }
+    return {
+        offsetX,
+        offsetY
+    };
+}
+
 export function getRectData(node, uniqueId, {
     left, top, right, bottom
 }, extraData) {
-    const element = React.isValidElement(node) && ReactDOM.findDOMNode(node);
-    const scrollElement = getScrollingElement(element);
+    const { offsetX, offsetY } = getAbsoluteOffsetOf(node);
     return {
         ...extraData,
         uniqueId,
-        minX: left + scrollElement.scrollLeft,
-        maxX: right + scrollElement.scrollLeft,
-        minY: top + scrollElement.scrollTop,
-        maxY: bottom + scrollElement.scrollTop
+        minX: left + offsetX,
+        maxX: right + offsetX,
+        minY: top + offsetY,
+        maxY: bottom + offsetY
     };
 }
 

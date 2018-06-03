@@ -2,6 +2,20 @@ import sinon from 'sinon';
 import DragDropContext from '../src/DragDropContext';
 import * as utils from '../src/utils';
 
+let stubFindDOMNode = null;
+beforeEach(() => {
+    stubFindDOMNode = sinon.stub(utils, 'findDOMNode');
+    stubFindDOMNode.returns({
+        cloneNode: () => ({
+            style: {}
+        })
+    });
+});
+
+afterEach(() => {
+    stubFindDOMNode.restore();
+});
+
 test('DragDropContext - startDragging', () => {
     sinon.spy(utils, 'lockDownSelection');
     sinon.spy(document, 'addEventListener');
@@ -24,14 +38,6 @@ test('DragDropContext - startDragging', () => {
     utils.lockDownSelection.restore();
     document.addEventListener.restore();
 });
-
-jest.mock('react-dom', () => ({
-    findDOMNode: () => ({
-        cloneNode: () => ({
-            style: {}
-        })
-    })
-}));
 
 test('DragDropContext - handleDrag', () => {
     sinon.stub(document.body, 'appendChild');

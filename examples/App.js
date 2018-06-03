@@ -19,10 +19,10 @@ class App extends React.Component {
                 groupId: 'a'
             }
         ],
-        sortableItems: _.times(200, n => ({
+        sortableItems: _.times(250, n => ({
             id: `s-${n}`,
             text: `Sortable-${n}`,
-            groupId: Math.random() > 0.5 ? 'y' : 'x'
+            groupId: n > 200 ? 'z' : (Math.random() > 0.5 ? 'y' : 'x')  // eslint-disable-line
         }))
     }
 
@@ -135,6 +135,17 @@ class App extends React.Component {
                     }}
                 >
                     {this.renderGroupId('b', '#feea8b')}
+                </div>
+                <div
+                    style={{
+                        float: 'right',
+                        maxHeight: 600,
+                        minWidth: 200,
+                        overflow: 'auto'
+                    }}
+                >
+                    <h1>Scrollable container</h1>
+                    {this.renderSortableGroupId('z', '#cceeee')}
                 </div>
                 <div
                     style={{
