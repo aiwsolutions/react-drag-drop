@@ -69,7 +69,7 @@ export function isValidDOMElement(element) {
 }
 
 export function findDOMNode(element) {
-    if (React.Component.prototype.isPrototypeOf(element)) {       // eslint-disable-line
+    if (element && !!element.isReactComponent) {
         return ReactDOM.findDOMNode(element);
     }
     return isValidDOMElement(element) ? element : null;
