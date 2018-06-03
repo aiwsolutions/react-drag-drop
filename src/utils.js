@@ -1,5 +1,4 @@
 /* eslint react/no-find-dom-node: 0 */
-import React from 'react';
 import ReactDOM from 'react-dom';
 import _ from 'lodash';
 
@@ -70,7 +69,12 @@ export function isValidDOMElement(element) {
 
 export function findDOMNode(element) {
     if (element && !!element.isReactComponent) {
-        return ReactDOM.findDOMNode(element);
+        try {
+            return ReactDOM.findDOMNode(element);
+        } catch (e) {
+            // node is temporarily unmount
+            return null;
+        }
     }
     return isValidDOMElement(element) ? element : null;
 }
